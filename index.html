@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gift Mail</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: url('polisi.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+      text-align: center;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    body::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 0;
+    }
+    
+    .container {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mail {
+      width: 140px;
+      cursor: pointer;
+      transition: transform 0.4s ease;
+      animation: float 3s ease-in-out infinite;
+      filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.3));
+    }
+
+    .mail.opened {
+      animation: openMail 0.8s forwards;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+      100% { transform: translateY(0); }
+    }
+
+    @keyframes openMail {
+      0% { transform: scale(1) rotate(0); }
+      20% { transform: scale(1.1) rotate(-5deg); }
+      40% { transform: scale(1.2) rotate(5deg); }
+      60% { transform: scale(1.3) rotate(-3deg); }
+      80% { transform: scale(1.2) rotate(2deg); }
+      100% { transform: scale(1.2) rotate(0); }
+    }
+
+    #message {
+      margin-top: 30px;
+      font-size: 1.5rem;
+      padding: 20px 30px;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      max-width: 90%;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s ease;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    #message.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #shareBtn {
+      margin-top: 25px;
+      padding: 12px 24px;
+      background-color: #25D366;
+      color: white;
+      border: none;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: none;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    }
+
+    #shareBtn:hover {
+      background-color: #1ebc57;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
+    }
+    
+    #shareBtn:active {
+      transform: translateY(0);
+    }
+
+    footer {
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      backdrop-filter: blur(5px);
+      z-index: 1;
+    }
+    
+    .instructions {
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    }
+    
+    @media (max-width: 768px) {
+      #message {
+        font-size: 1.3rem;
+        padding: 15px 25px;
+      }
+      
+      .mail {
+        width: 120px;
+      }
+      
+      .instructions {
+        font-size: 1.1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <p class="instructions">Klik surat untuk melihat pesan!</p>
+    <img src="mail.png" alt="Mail" class="mail" id="mail" onclick="showMessage()" />
+    <div id="message"></div>
+    <button id="shareBtn" onclick="shareToWA()">Bagikan ke WhatsApp</button>
+  </div>
+
+  <footer id="footerTime">Memuat waktu...</footer>
+
+  <script>
+    const messages = [
+      "Tetap semangat, ada masa depan yang menunggu!",
+      "Bulan ini banyak peluang untukmu jangan sia siakan!",
+      "Kamu luar biasa, berterimakasih kepada dirimu dengan tidur yang cukup!",
+      "Teruslah belajar dan tumbuh, kamu hampir sampai!",
+      "Jangan takut gagal, coba lagi, dunia ini penuh peluang!",
+      "Setiap usaha ada hasilnya percayalah.",
+      "Waktu tidak bisa diputar ulang, jangan sia siakan waktumu sekarang",
+      "Fokus pada tujuanmu, jangan biarkan omongan orang lain menghentikanmu!",
+      "Jangan habiskan waktumu untuk bermain, ayo cari bakatmu!",
+      "Tuhan selalu ada bersama orang yang sabar."
+    ];
+
+    let opened = false;
+
+    function showMessage() {
+      if (opened) return;
+      opened = true;
+
+      const mail = document.getElementById("mail");
+      const messageDiv = document.getElementById("message");
+      const shareBtn = document.getElementById("shareBtn");
+      const instructions = document.querySelector(".instructions");
+
+      // Animasi mail dibuka
+      mail.classList.add("opened");
+      
+      // Sembunyikan instruksi
+      instructions.style.opacity = "0";
+      instructions.style.transition = "opacity 0.5s ease";
+
+      // Ambil pesan random
+      const randomMsg = messages[Math.floor(Math.random() * messages.length)];
+      setTimeout(() => {
+        messageDiv.textContent = randomMsg;
+        messageDiv.classList.add("show");
+        setTimeout(() => {
+          shareBtn.style.display = "inline-block";
+          shareBtn.style.animation = "fadeIn 0.5s forwards";
+        }, 500);
+      }, 800);
+    }
+
+    function updateTime() {
+      const now = new Date();
+      const tanggal = now.toLocaleDateString('id-ID', {
+        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+      });
+      const jam = now.toLocaleTimeString('id-ID');
+      document.getElementById("footerTime").textContent = `${tanggal} - ${jam}`;
+    }
+
+    function shareToWA() {
+      const msg = document.getElementById("message").textContent;
+      const url = `https://wa.me/?text=${encodeURIComponent(msg)}%0A%23GiftMail`;
+      window.open(url, "_blank");
+    }
+
+    setInterval(updateTime, 1000);
+    updateTime();
+    
+    // Add fadeIn animation
+    document.head.insertAdjacentHTML('beforeend', `
+      <style>
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      </style>
+    `);
+  </script>
+</body>
+</html>
