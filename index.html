@@ -201,6 +201,8 @@
       instructions.style.opacity = "0";
       instructions.style.transition = "opacity 0.5s ease";
 
+       messageDiv.classList.remove("initial");
+
       // Ambil pesan random
       const randomMsg = messages[Math.floor(Math.random() * messages.length)];
       setTimeout(() => {
